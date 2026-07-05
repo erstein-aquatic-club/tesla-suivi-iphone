@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111827">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Tesla Suivi">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Tesla Suivi</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-content">
+      <p class="eyebrow">Suivi annonces Tesla</p>
+      <h1>Trouve la meilleure Model 3</h1>
+      <p class="hero-subtitle">Suivi iPhone hors-ligne avec filtres, favoris, statut, score et budget 2 ans FSD inclus.</p>
+      <button id="addBtn" class="fab">+ Ajouter</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="kpis" aria-label="Synthèse">
+      <article><span>Meilleur score</span><strong id="kpiBestScore">—</strong><small id="kpiBestCar">—</small></article>
+      <article><span>Budget moyen</span><strong id="kpiAvgBudget">—</strong><small id="kpiAvgBudgetSub">—</small></article>
+      <article><span>Annonces</span><strong id="kpiCount">—</strong><small id="kpiCountSub">—</small></article>
+    </section>
+
+    <section class="panel sticky-panel">
+      <label class="search">
+        <span>Recherche</span>
+        <input id="searchInput" type="search" placeholder="Couleur, ville, Ryzen, lien…">
+      </label>
+      <div class="filters">
+        <select id="modelFilter" aria-label="Modèle"><option value="">Tous les modèles</option></select>
+        <select id="autopilotFilter" aria-label="Autopilot">
+          <option value="">Tous Autopilot</option>
+          <option value="fsd">FSD</option>
+          <option value="eap">EAP</option>
+          <option value="base">Base</option>
+        </select>
+        <select id="statusFilter" aria-label="Statut">
+          <option value="">Tous statuts</option>
+          <option>À suivre</option>
+          <option>Contacté</option>
+          <option>À voir</option>
+          <option>Écarté</option>
+          <option>Acheté</option>
+        </select>
+        <select id="sortSelect" aria-label="Tri">
+          <option value="score">Tri: meilleur score</option>
+          <option value="budget">Tri: budget bas</option>
+          <option value="km">Tri: km bas</option>
+          <option value="prix">Tri: prix bas</option>
+          <option value="fav">Tri: favoris</option>
+        </select>
+      </div>
+      <label class="toggle"><input id="favOnly" type="checkbox"> Favoris seulement</label>
+      <div class="toolbar">
+        <strong id="resultCount">—</strong>
+        <button id="exportCsvBtn">CSV</button>
+        <button id="exportJsonBtn">Sauvegarde</button>
+        <label class="import-btn">Importer <input id="importJsonInput" type="file" accept="application/json" hidden></label>
+        <button id="resetBtn">Reset</button>
+      </div>
+    </section>
+
+    <section id="cards" class="cards" aria-live="polite"></section>
+  </main>
+
+  <dialog id="editor" class="modal">
+    <form id="listingForm" method="dialog">
+      <div class="modal-head">
+        <h2 id="modalTitle">Nouvelle annonce</h2>
+        <button type="button" id="closeEditor" class="icon-btn">×</button>
+      </div>
+      <div class="grid-form">
+        <label>Modèle<select name="modele"><option>LR AWD</option><option>Performance</option><option>Propulsion</option></select></label>
+        <label>Prix<input name="prix" type="number" min="0" inputmode="numeric" required></label>
+        <label>Origine<input name="origine" placeholder="France, Allemagne…"></label>
+        <label>Autopilot<select name="autopilot"><option>🥇 FSD</option><option>🥈 Autopilot amélioré</option><option>🥉 Base</option></select></label>
+        <label>Processeur<input name="processeur" placeholder="Ryzen confirmé/probable…"></label>
+        <label>Couleur<input name="couleur" placeholder="Noir, Blanc…"></label>
+        <label>Importation<input name="coutImportation" type="number" min="0" inputmode="numeric"></label>
+        <label>Kilométrage<input name="kilometrage" type="number" min="0" inputmode="numeric"></label>
+        <label>Intérieur<input name="interieur" placeholder="Noir, Blanc…"></label>
+        <label>SOH %<input name="soh" type="number" min="0" max="100" step="0.1" inputmode="decimal"></label>
+        <label>Covering prévu<input name="covering" type="number" min="0" inputmode="numeric"></label>
+        <label>Statut<select name="statut"><option>À suivre</option><option>Contacté</option><option>À voir</option><option>Écarté</option><option>Acheté</option></select></label>
+        <label class="wide">Localisation<input name="localisation" placeholder="Ville + distance"></label>
+        <label class="wide">Lien<input name="lien" type="url" placeholder="https://…"></label>
+        <label class="wide">Remarques<textarea name="remarques" rows="3"></textarea></label>
+        <label class="toggle wide"><input name="favori" type="checkbox"> Marquer comme favori</label>
+      </div>
+      <button class="save" type="submit">Enregistrer</button>
+    </form>
+  </dialog>
+
+  <dialog id="deleteDialog" class="modal small">
+    <h2>Supprimer cette annonce ?</h2>
+    <p>Cette action ne supprime que la copie locale dans l’app.</p>
+    <div class="actions"><button id="deleteNo">Annuler</button><button id="deleteYes" class="danger">Supprimer</button></div>
+  </dialog>
+
+  <footer>
+    <p>Score: Autopilot 35% + km 30% + budget 2 ans FSD 20% + Performance 15%. Données stockées dans ton navigateur.</p>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
